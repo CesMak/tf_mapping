@@ -8,7 +8,9 @@
 // #include <tf/transform_listener.h>
 
 // messages
-// #include <geometry_msgs/PoseStamped.h>
+//#include <geometry_msgs/TransformStamped.h>
+#include <tf2_msgs/TFMessage.h>
+
 // #include <geometry_msgs/PoseArray.h>
 // #include <sensor_msgs/CameraInfo.h>
 // #include <sensor_msgs/image_encodings.h>
@@ -28,6 +30,7 @@ public:
 
 protected:
   // ROS API callbacks
+  void input_tfCb(const tf2_msgs::TFMessageConstPtr& msg);
   // void imageCb(const sensor_msgs::ImageConstPtr& image);
   // void updateParamsCb(const std_msgs::Float64& msg);
 
@@ -36,19 +39,23 @@ protected:
 
 
   // class members
+  int first_tf_id_;
+  int tf_counter_;
+  bool first_tf_detected_;
+  tf2_msgs::TFMessageConstPtr tf_msg_;
   //tf::TransformListener tf_listener_;
   //Detector::Ptr detector_;
 
   //sensor_msgs::CameraInfo camera_info_;
 
   // parameters (set in yaml file)
-  std::string world_frame_;
+  //std::string world_frame_;
  
 
   // subscriber
   // image_transport::Subscriber img_sub_;
   // ros::Subscriber             init_pos_sub_;  // remove position error!
-  // ros::Subscriber              update_params_sub_; 
+  ros::Subscriber              input_tf_sub_; 
 
   // publisher
   // image_transport::Publisher binary_img_pub_;

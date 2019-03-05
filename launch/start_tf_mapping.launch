@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="use_bag" default="True" />
+    <arg name="bag_name" default="tf_example1" />
+    <arg name="start_rviz" default="False" />
+
+    <!-- start bag file in a loop -->
+    <group if="$(arg use_bag)" >
+        <node pkg="rosbag" type="play" name="rosbag_play" args="-l $(find tf_mapping)/data/$(arg bag_name).bag" />
+    </group>
+
+    <!-- start tf_mapping node-->
+    <!-- load config into parameter server 
+    <rosparam file="$(find tf_mapping)/config/$(arg confi_name).yaml" command="load" />
+    -->
+
+     <!-- start tf_mapping node -->
+     <node name="tf_mapping_node" pkg="tf_mapping" type="tf_mapping_node" output="screen"  />
+
+    <!-- Start rviz -->
+    <group if="$(arg start_rviz)" >
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find ball_tracking_rgb)/config/extrinsic.rviz"/>
+    </group>
+</launch>

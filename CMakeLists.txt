@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   sensor_msgs
+  tf2_msgs
 )
 
 #find_package(OpenCV REQUIRED)
@@ -116,7 +117,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp tf std_msgs geometry_msgs sensor_msgs
+  CATKIN_DEPENDS roscpp tf std_msgs geometry_msgs sensor_msgs tf2_msgs
 #  DEPENDS system_lib
 )
 # |^ rviz_visual_tools deleted in catkin depends.
