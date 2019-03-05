@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="ns" default="turtlebot3" />
+  <arg name="bag" default="xtion_10.bag" />
+  <arg name="use_xtion" default="true" />
+  <arg name="ball_color" default="orange_ball" /> <!-- options: "", "orange_ball", "opt_circle_orange", "orange_small_basket_ball", "yellow_tennis_ball" -->
+
+  <!-- start bag file -->
+  <group if="$(arg use_xtion)">
+    <remap from="/openni2_grabber/camera/image" to="/turtlebot3/sensor/camera/rgb/image_rect_color" />
+    <remap from="/openni2_grabber/camera/rgb/camera_info" to="/turtlebot3/sensor/camera/rgb/camera_info"/>
+    <node pkg="rosbag" type="play" name="rosbag_play" args="--clock $(find turtlebot3_ball_tracking_exercise)/bags/$(arg bag)" />
+  </group>
+
+  <group unless="$(arg use_xtion)">
+    <node pkg="rosbag" type="play" name="rosbag_play" args="--clock $(find turtlebot3_ball_tracking_exercise)/bags/$(arg bag)" />
+  </group>
+
+  <!-- start ball tracking node -->
+  <include file="$(find turtlebot3_ball_tracking_exercise)/launch/ball_tracking.launch" ns="$(arg ns)">
+    <arg name="show_debug_img" value="false" />
+    <arg name="ball_color" value ="$(arg ball_color)" />
+  </include>
+
+  <!-- start static tf publisher -->
+  <node name="camera_world_tf_publisher" pkg="tf" type="static_transform_publisher" args="0.0 0.0 0.0 0.0 0.0 0.0 world camera_link 100" />
+
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find turtlebot3_ball_tracking_exercise)/config/ball_model.rviz"/>
+</launch>
+
+<!-- testing bags: - Kalman Filter (orange balls:)-->
+<!-- ball_occluded: 60, -20 ball occluded sollte herausaltern -->
+<!-- bal_obstacle: ball läuft an hinderniss vorbei (positionen unsicher ball sollte ca. auf abstand 60 auf platte von ca. -50 bis +30 laufen -->
+<!-- ball_at_ball: ball läuft hinter ball vorbei (liegender ball bei ca: 60,-10)  TODO! warum wird er am ende in den 0 noch reingemergt!? Fehler im Programm! -->
+
+<!-- testing bags: Precision -->
+<!-- optimal_circle: 25, 10, height?! ca.5?! Does not work for here?! -->
+<!-- close_real_ball:  10, 0, -1.8  works quite well -->
+
+
+<!-- xtion bags: -->
+<!-- xtion_2.bag: 2 perfect Circles (red-different color!) 1 middle (30(weg), 9cm hoch, 0 links rechts) 2 right down (30,0,6)  -->
+<!-- xtion_10.bag: real orange_ball tennisball, testing covariances! (nice small example!) -->

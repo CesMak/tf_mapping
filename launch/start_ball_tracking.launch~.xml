@@ -1,0 +1,266 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="use_camera" default="True" />
+    <arg name="use_bag" default="False" />
+    <arg name="bag_name" default="small" /> <!-- options: "xtion640x480_showcase", "xtion_rgb_1280x1024", "xtion_rgb_640x480", "r200_rgb_640x480", "r200_rgb_1920x1080", "r200_rgb_320x240_60"  -->
+    <arg name="ball_color" default="lab_bluebasketball" /> <!-- options: "", "lab_tennisball","lab_ytennisball", "red_ball", "orange_ball", "opt_circle_orange", "orange_small_basket_ball", "yellow_tennis_ball", "lab_basketball" -->
+    <arg name="do_extrinsic_calib_dynamic" default="true" />
+    <arg name="do_extrinsic_calib_static" default="false" />
+    <arg name="use_realsense" default="True" />
+    <arg name="use_xtion" default="False" />
+    <arg name="use_fast_publisher" default="True" />  <!-- should be true if used with RCS and BOP robot -->
+
+    <arg name="start_rviz" default="True" />
+    <arg name="start_plotjuggler" default="False" /> <!-- note to source catkin_ws in hri/storage/user/mlampre/software  for step analysis on Bert not working cause no qt5 compile it on siren21-->
+    <arg name="start_rqt_multiplot" default="False" /> <!-- note to source catkin_ws in hri/storage/user/mlampre/software -->
+    <arg name="inc_second_cam" default="False" />
+
+    <group if="$(arg inc_second_cam)" >
+       <include file="$(find openni2_launch)/launch/openni2.launch">
+	       <arg name="camera" value="xtion" />
+        </include>
+    </group>
+
+    <!-- start camera -->
+    <group if="$(arg use_camera)" >
+        <include file="$(find start_camera)/launch/start_camera.launch">
+         <arg name="start_xtion_pro_live" default="$(arg use_xtion)" />
+         <arg name="xtion_high_res" default= "False" />
+
+         <arg name="start_realsense_r200" default="$(arg use_realsense)" />
+
+         <arg name="pub_rgb_image" default= "true" />
+         <arg name="pub_depth_image" default= "true" />
+         <arg name="pub_points" default= "true" />
+         <arg name="pub_rgb_camera_info" default= "true" />
+         <arg name="pub_depth_camera_info" default= "true" />
+        </include>
+    </group>
+
+    <!-- start bag file in a loop -->
+    <group if="$(arg use_bag)" >
+        <node pkg="rosbag" type="play" name="rosbag_play" args="-l /hri/storage/user/mlampre/bags/$(arg bag_name).bag" />
+    </group>
+
+    <!-- start ball tracking node-->
+    <include file="$(find ball_tracking_rgb)/launch/ball_tracking.launch">
+        <arg name="show_debug_img" value="false" />
+        <arg name="ball_color" value ="$(arg ball_color)" />
+    </include>
+
+    <!-- Do the extrinsic camera calibration -->
+    <group if="$(arg do_extrinsic_calib_dynamic)" >
+        <include file="$(find aruco_eye_ros)/launch/start_all.launch">
+            <arg name="use_camera" default="False" />
+            <arg name="use_rviz" default="False" />
+            <arg name="use_bag" default="False" />
+            <arg name="flag_display_output_image" default="False" />
+        </include>
+    </group>
+
+    <!-- Send a static transform -do this instead of do_extrinsic_calib_dynamic
+         Obtain the pose with -->
+    <group if="$(arg do_extrinsic_calib_static)" >
+        <!-- for xtion at distance 0.7 see xtion bags
+        <node name="camera_world_tf_publisher" pkg="tf" type="static_transform_publisher" args="-0.062086513266 -0.0163544546813  0.709787294269
+        0.66431169235 0.686654845263 -0.0865911694561 0.282229611852 aruco_detector plate_origin  100" />
+        -->
+
+        <!-- for realsense at distance 0.74 see realsense bags 
+
+ rosrun tf tf_echo /aruco_detector /plate_origin
+- Translation: [-0.018, -0.008, 0.872]
+- Rotation: in Quaternion [0.839, -0.542, -0.036, -0.042]
+            in RPY (radian) [-3.110, 0.106, -1.145]
+            in RPY (degree) [-178.167, 6.077, -65.598]
+
+
+
+-->
+        <node name="camera_world_tf_publisher" pkg="tf" type="static_transform_publisher" args="-0.018, -0.008, 0.872 0.839, -0.542, -0.036, -0.042 aruco_detector plate_origin  100" />
+    </group>
+
+    <!-- start fast publisher -->
+    <group if="$(arg use_fast_publisher)" >
+        <node pkg="ball_tracking_rgb" type="fast_first_ball_state_pub.py" name="fast_first_ball_state_pub_node"/>
+        <node pkg="ball_tracking_rgb" type="fast_next_pub.py" name="fast_next_ball_state_pub_node"/>
+    </group>
+
+    <!-- Start rviz -->
+    <group if="$(arg start_rviz)" >
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find ball_tracking_rgb)/config/extrinsic.rviz"/>
+    </group>
+
+    <group if="$(arg start_plotjuggler)">
+        <node pkg="plotjuggler" type="PlotJuggler" name="my_plot_Juggler" args="" />
+    </group>
+
+    <group if="$(arg start_rqt_multiplot)">
+        <node pkg="rqt_multiplot" type="rqt_multiplot" name="my_rqt_multiplot" args="" />
+    </group>
+
+  <!-- start static tf publisher
+  <node name="camera_world_tf_publisher" pkg="tf" type="static_transform_publisher" args="0.0 0.0 0.0 0.0 0.0 0.0 world plate_origin 100" />  -->
+
+<!--  <group unless="$(arg do_extrinsic_calib)" >
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find turtlebot3_ball_tracking_exercise)/config/ball_model.rviz"/>
+  </group> -->
+
+</launch>
+
+
+<!--
+
+
+
+the /camera/rgb/camera_info looks like:
+header:
+  seq: 47
+  stamp:
+    secs: 1524125203
+    nsecs:  74520819
+  frame_id: camera_rgb_optical_frame
+height: 480
+width: 640
+distortion_model: plumb_bob
+D: [0.0, 0.0, 0.0, 0.0, 0.0]
+K: [570.3422241210938, 0.0, 319.5, 0.0, 570.3422241210938, 239.5, 0.0, 0.0, 1.0]
+R: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+P: [570.3422241210938, 0.0, 319.5, 0.0, 0.0, 570.3422241210938, 239.5, 0.0, 0.0, 0.0, 1.0, 0.0]
+binning_x: 0
+binning_y: 0
+roi:
+  x_offset: 0
+  y_offset: 0
+  height: 0
+  width: 0
+  do_rectify: False
+-->
+
+<!-- starting the above code leads to:
+/rosout
+/rosout_agg
+/tf
+/tf_static
+/turtlebot3/ball_tracking/ball_states
+/turtlebot3/ball_tracking/binary_img
+/turtlebot3/ball_tracking/binary_img/compressed
+/turtlebot3/ball_tracking/binary_img/compressed/parameter_descriptions
+/turtlebot3/ball_tracking/binary_img/compressed/parameter_updates
+/turtlebot3/ball_tracking/binary_img/compressedDepth
+/turtlebot3/ball_tracking/binary_img/compressedDepth/parameter_descriptions
+/turtlebot3/ball_tracking/binary_img/compressedDepth/parameter_updates
+/turtlebot3/ball_tracking/binary_img/theora
+/turtlebot3/ball_tracking/binary_img/theora/parameter_descriptions
+/turtlebot3/ball_tracking/binary_img/theora/parameter_updates
+/turtlebot3/ball_tracking/debug_img
+/turtlebot3/ball_tracking/debug_img/compressed
+/turtlebot3/ball_tracking/debug_img/compressed/parameter_descriptions
+/turtlebot3/ball_tracking/debug_img/compressed/parameter_updates
+/turtlebot3/ball_tracking/debug_img/compressedDepth
+/turtlebot3/ball_tracking/debug_img/compressedDepth/parameter_descriptions
+/turtlebot3/ball_tracking/debug_img/compressedDepth/parameter_updates
+/turtlebot3/ball_tracking/debug_img/theora
+/turtlebot3/ball_tracking/debug_img/theora/parameter_descriptions
+/turtlebot3/ball_tracking/debug_img/theora/parameter_updates
+/turtlebot3/ball_tracking/get_ball_states/cancel
+/turtlebot3/ball_tracking/get_ball_states/feedback
+/turtlebot3/ball_tracking/get_ball_states/goal
+/turtlebot3/ball_tracking/get_ball_states/result
+/turtlebot3/ball_tracking/get_ball_states/status
+/turtlebot3/sensor/camera/rgb/camera_info
+/turtlebot3/sensor/camera/rgb/image_rect_color
+/turtlebot3/sensor/camera/rgb/image_rect_color/compressed
+/turtlebot3/sensor/camera/rgb/image_rect_color/compressed/parameter_descriptions
+/turtlebot3/sensor/camera/rgb/image_rect_color/compressed/parameter_updates
+/turtlebot3/sensor/camera/rgb/image_rect_color/compressedDepth
+/turtlebot3/sensor/camera/rgb/image_rect_color/compressedDepth/parameter_descriptions
+/turtlebot3/sensor/camera/rgb/image_rect_color/compressedDepth/parameter_updates
+/turtlebot3/sensor/camera/rgb/image_rect_color/theora
+/turtlebot3/sensor/camera/rgb/image_rect_color/theora/parameter_descriptions
+/turtlebot3/sensor/camera/rgb/image_rect_color/theora/parameter_updates
+-->
+
+<!--
+if the markers work: rostopic echo /turtlebot3/turtlebot3_ball_model_vis/ball_tracking/ball_states_vis
+markers:
+  -
+    header:
+      seq: 0
+      stamp:
+        secs: 1524556409
+        nsecs: 299701865
+      frame_id: world
+    ns: text
+    id: 5
+    type: 9
+    action: 0
+    pose:
+      position:
+        x: 0.314809775019
+        y: 0.0663601923347
+        z: 0.0809897836685
+      orientation:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        w: 1.0
+    scale:
+      x: 0.064
+      y: 0.064
+      z: 0.064
+    color:
+      r: 1.0
+      g: 1.0
+      b: 1.0
+      a: 1.0
+    lifetime:
+      secs: 0
+      nsecs:         0
+    frame_locked: False
+    points: []
+    colors: []
+    text: 5
+    mesh_resource: ''
+    mesh_use_embedded_materials: False
+    -->
+
+
+
+  <!-- Do the extrinsic camera calibration
+  <group if="$(arg do_extrinsic_calib)" >
+    <include file="$(find aruco_eye_ros)/launch/aruco_eye_ros_detector.launch">
+        <arg name="camera_calibration_file" default=""/>
+        <arg name="camera_info_topic_name" default="/turtlebot3/sensor/camera/rgb/camera_info"/>
+
+        <arg name="aruco_detector_frame_name" default="aruco_detector"/>
+        <arg name="aruco_marker_child_base_name" default="aruco_marker_"/>
+
+        <arg name="image_topic_name" 	default="/turtlebot3/sensor/camera/rgb/image_rect_color" />
+        <arg name="aruco_list_topic_name" 	default="aruco_eye/aruco_observation" />
+    </include>
+
+
+    <include file="$(find aruco_eye_ros)/launch/aruco_eye_ros_display.launch">
+        <arg name="flag_display_output_image" default="False"/>
+        <arg name="display_output_image_window_name" default="arUco_display_window"/>
+
+        <arg name="display_output_image_service_name" default="aruco_eye/enable_display_output_image"/>
+
+        <arg name="camera_calibration_file" default=""/>
+        <arg name="camera_info_topic_name" default="/turtlebot3/sensor/camera/rgb/camera_info"/>
+
+        <arg name="image_topic_name" 	default="/turtlebot3/sensor/camera/rgb/image_rect_color" />
+        <arg name="output_image_topic_name" 	default="aruco_eye/aruco_observation_image/image_raw" />
+        <arg name="aruco_list_topic_name" 	default="aruco_eye/aruco_observation" />
+    </include>
+
+
+    <node name="aruco_origin_rviz_marker" pkg="aruco_eye_ros" type="aruco_eye_ros_rviz" output="screen"></node>
+
+    <group if="$(arg start_rviz_extrinsic)" >
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find turtlebot3_ball_tracking_exercise)/config/extrinsic.rviz"/>
+    </group>
+    </group>
+-->

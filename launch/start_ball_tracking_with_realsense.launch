@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="ns" default="turtlebot3" />
+
+  <!-- start realsense node -->
+  <include file="$(find realsense_camera)/launch/r200_nodelet_rgbd.launch" ns="$(arg ns)" >
+    <remap from="camera/color/image_rect_color" to="sensor/camera/rgb/image_rect_color" />
+    <remap from="camera/color/camera_info" to="sensor/camera/rgb/camera_info" />
+  </include>
+
+  <!-- start ball tracking node -->
+  <include file="$(find turtlebot3_ball_tracking_exercise)/launch/ball_tracking.launch" ns="$(arg ns)">
+    <arg name="show_debug_img" value="true" />
+  </include>
+
+  <!-- start static tf publisher -->
+  <node name="camera_world_tf_publisher" pkg="tf" type="static_transform_publisher" args="0.0 0.0 0.0 0.0 0.0 0.0 world camera_link 100" />
+
+
+  <!-- Do the extrinsic camera calibration -->
+
+
+</launch>

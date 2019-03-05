@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="ns" default="turtlebot3" />
+
+  <group ns="$(arg ns)">
+    <!-- launch RViz -->
+    <node name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find turtlebot3_ball_tracking_exercise)/config/ball_model.rviz" ns="$(arg ns)" />
+  </group>
+</launch>

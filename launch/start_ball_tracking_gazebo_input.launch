@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="ball_color" default="blue_ball_gz" /> <!-- options: "", "blue_ball_gz", "orange_ball", "opt_circle_orange", "orange_small_basket_ball", "yellow_tennis_ball orange_ball_gz" -->
+
+    <node pkg="rostopic" type="rostopic" name="default_camera_info" args="pub /camera/rgb/camera_info_realsense_640x480_gz_static sensor_msgs/CameraInfo
+    --latch --file=$(find ball_tracking_rgb)/config/camera_info_realsense_640x480_gz_static.camera_info" output="screen"/>
+
+  <!-- start ball tracking node -->
+  <include file="$(find ball_tracking_rgb)/launch/ball_tracking.launch">
+    <arg name="show_debug_img" value="false" />
+    <arg name="ball_color" value ="$(arg ball_color)" />
+  </include>
+
+  <!-- start static tf publisher
+  <node name="camera_world_tf_publisher" pkg="tf" type="static_transform_publisher" args="0.0 0.0 0.0 0.0 0.0 0.0 world camera_link 100" />
+-->
+  <node pkg="rviz" type="rviz" name="rviz_ball_tracking" args="-d $(find ball_tracking_rgb)/config/ball_model_gz_as_input.rviz"/>
+</launch>

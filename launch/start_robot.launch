@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="ns" default="turtlebot3" />
+  <arg name="show_debug_img" default="false" />
+
+  <!-- start ball tracking node -->
+  <include file="$(find turtlebot3_ball_tracking_exercise)/launch/ball_tracking.launch" ns="$(arg ns)">
+    <arg name="show_debug_img" value="$(arg show_debug_img)" />
+    <arg name="update_rate" value="5" />
+  </include>
+</launch>

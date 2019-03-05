@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="use_camera" default="True" />
+    <arg name="use_realsense" default="True" />
+    <arg name="use_xtion" default="False" />
+
+    <!-- start camera -->
+    <group if="$(arg use_camera)" >
+        <include file="$(find start_camera)/launch/start_camera.launch">
+         <arg name="start_xtion_pro_live" default="$(arg use_xtion)" />
+         <arg name="xtion_high_res" default= "False" />
+
+         <arg name="start_realsense_r200" default="$(arg use_realsense)" />
+
+         <arg name="pub_rgb_image" default= "true" />
+         <arg name="pub_depth_image" default= "true" />
+         <arg name="pub_points" default= "true" />
+         <arg name="pub_rgb_camera_info" default= "true" />
+         <arg name="pub_depth_camera_info" default= "true" />
+        </include>
+    </group>
+
+</launch>
+
+<!-- rosbag record /camera/rgb/image_rect_color /camera/rgb/camera_info 
+rostopic record /ball_tracking_rgb/first_ball_state
+
+
+
+
+rosbag record /ball_tracking_rgb/first_ball_state /ball_tracking_rgb/first_ball_raw rostopic echo /aruco_eye_ros/plate_origin_marker
+
+
+-->
