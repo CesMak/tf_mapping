@@ -14,11 +14,14 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   std_msgs
   geometry_msgs
+  visualization_msgs
   sensor_msgs
   tf2_msgs
+  aruco
 )
 
-#find_package(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED) # is required otherwise including aruco throws error
+find_package(aruco REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -117,7 +120,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp tf std_msgs geometry_msgs sensor_msgs tf2_msgs
+  CATKIN_DEPENDS roscpp tf std_msgs geometry_msgs visualization_msgs sensor_msgs tf2_msgs aruco
 #  DEPENDS system_lib
 )
 # |^ rviz_visual_tools deleted in catkin depends.
@@ -152,8 +155,8 @@ add_executable(tf_mapping_node src/tf_mapping_node.cpp)
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
-target_link_libraries(tf_mapping_node ${PROJECT_NAME} ) 
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${aruco_LIBS} ${OpenCV_LIBS})
+target_link_libraries(tf_mapping_node ${PROJECT_NAME}  ) 
 
 #############
 ## Install ##

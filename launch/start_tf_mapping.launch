@@ -1,13 +1,36 @@
 <?xml version="1.0"?>
 
 <launch>
-    <arg name="use_bag" default="True" />
-    <arg name="bag_name" default="tf_example1" />
-    <arg name="start_rviz" default="False" />
+    <arg name="use_img_bag" default="True" /> <!-- contains just images no camera_info -> use_camera must be off -->
+    <arg name="use_bag" default="False" />  <!-- use tf bag -->
+    <arg name="bag_name" default="tf_example2_img" />
+    <arg name="start_rviz" default="True" />
 
     <!-- start bag file in a loop -->
     <group if="$(arg use_bag)" >
         <node pkg="rosbag" type="play" name="rosbag_play" args="-l $(find tf_mapping)/data/$(arg bag_name).bag" />
+    </group>
+
+    <!-- include aruco_detector_ocv -->
+    <group unless="$(arg use_bag)" >
+            <include file="$(find aruco_detector_ocv)/launch/detector.launch">
+                <arg name="use_rviz" default="False" />
+                <arg name="use_camera" default="False" />
+                <arg name="use_bag" default="$(arg use_img_bag)" />
+                <arg name="bag_name" default="$(arg bag_name)" />
+
+                <arg name="image_width" default="640" />
+                <arg name="image_height" default="480" />
+                <arg name="camera" default="/usb_cam/image_raw" />
+                <arg name="camera_info" default="/camera/camera_info" />
+                <arg name="tf_prefix" default="marker_id" /> <!-- do not change! -->
+                <arg name="show_detections" default="true" />
+                <arg name="marker_size" default="0.05" doc="length of the physical marker's side in meters"/>
+                <arg name="dictionary_name" default="DICT_4X4_1000" />
+                <arg name="blur_window_size" default="7" />
+                <arg name="num_detected" default="25" /><!-- 0: do not use it, -->
+                <arg name="min_prec_value" default="50" /><!-- 0: do not use it, 80 means aruco marker must be detected in 80% of the last pics to be displayed -->
+             </include>
     </group>
 
     <!-- start tf_mapping node-->
@@ -20,6 +43,12 @@
 
     <!-- Start rviz -->
     <group if="$(arg start_rviz)" >
-        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find ball_tracking_rgb)/config/extrinsic.rviz"/>
+        <group if="$(arg use_bag)" >
+            <node pkg="rviz" type="rviz" name="rviz" args="-d $(find tf_mapping)/config/tf_mapping_bag.rviz"/>
+        </group>
+
+        <group unless="$(arg use_bag)" >
+            <node pkg="rviz" type="rviz" name="rviz" args="-d $(find tf_mapping)/config/tf_mapping.rviz"/>
+        </group>
     </group>
 </launch>
