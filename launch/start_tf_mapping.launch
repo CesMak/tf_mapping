@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
-    <arg name="use_img_bag" default="True" /> <!-- contains just images no camera_info -> use_camera must be off -->
+    <arg name="use_img_bag" default="False" /> <!-- contains just images no camera_info -> use_camera must be off -->
     <arg name="use_bag" default="False" />  <!-- use tf bag -->
     <arg name="bag_name" default="tf_example2_img" />
     <arg name="start_rviz" default="True" />
@@ -15,7 +15,7 @@
     <group unless="$(arg use_bag)" >
             <include file="$(find aruco_detector_ocv)/launch/detector.launch">
                 <arg name="use_rviz" default="False" />
-                <arg name="use_camera" default="False" />
+                <arg name="use_camera" default="True" />
                 <arg name="use_bag" default="$(arg use_img_bag)" />
                 <arg name="bag_name" default="$(arg bag_name)" />
 

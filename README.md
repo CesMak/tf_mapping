@@ -1,6 +1,17 @@
 # tf_mapping
 
 
+Stelle so auf, dass zuerst nur Marker_Id = 1 footprint sieht. Dadurch werden folgende Marker erstellt:
+* Dort wo die Kamera aktuell ist: marker_globe_0
+* Dort wo man den Ursprung haben möchte: marker_globe_1 = *footprint of origin* -> set fixed frame to marker_globe_1
+* Bewege dann Kamera so dass Marker_Id = 1 und Marker_Id = 2 auf einem Bild zu sehen sind dadurch wird dann marker_globe_2 erstellt.
+* Fahre dann so weiter fort um map aufzubauen.
+* starte python skript um map abzuspeichern
+* starte roslaunch die automatisch fake_marker published.
+* diese fake_marker können dann zur navigation genutzt werden.
+ 
+
+
 TODO 
 ![aruco_detector_example](https://github.com/CesMak/aruco_detector_ocv/blob/master/data/rviz_example.png)
 

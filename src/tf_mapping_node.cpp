@@ -1,6 +1,8 @@
 #include <tf_mapping/tf_mapping_node.h>
 #include <tf_mapping/helper.h>
 
+// rostopic echo /scan |grep frame_id
+
 namespace tf_mapping
 {
 
@@ -9,11 +11,12 @@ TfMappingNode::TfMappingNode(ros::NodeHandle& nh):
   listener_ (new tf::TransformListener), // Initialize TF Listener  
   first_tf_detected_(false),
   tf_counter_(0),
-  space_type_ ("plane"), // Space type - 2D plane 
+  space_type_ ("3D"), // Space type - 2D plane 
   first_tf_id_(-1),
-  num_of_markers_(10),
-  marker_size_(0.1), // Marker size in m
-  closest_camera_index_(0) // Reset closest camera index 
+  num_of_markers_(30),
+  marker_size_(0.05), // Marker size in m
+  closest_camera_index_(0), // Reset closest camera index 
+  lowest_number_in_list_(-1)
 {
  
   // Node Handle stuff:
@@ -96,27 +99,31 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
   // Save previous marker count
   tf_counter_previous_ = tf_counter_;
 
-  int lowest_number_in_list = 1000;
   int num_of_ids = tf_msg_list_->transforms.size();
+
+  // If no marker found, print statement
+  if(num_of_ids == 0)
+    ROS_WARN("No marker found!");
+
   for(int i = 0;i<num_of_ids;i++)
   {
     int tmp = getNumOfString(tf_msg_list_->transforms[i].child_frame_id);
-    if(tmp<=lowest_number_in_list)
-      lowest_number_in_list = tmp;
+    if(tmp< lowest_number_in_list_)
+      lowest_number_in_list_ = tmp;
   }
-  ROS_INFO_STREAM("The lowest id is " << lowest_number_in_list <<" #ids in List is: "<<num_of_ids);
+  ROS_INFO_STREAM("The lowest id is " << lowest_number_in_list_ <<" #ids in List is: "<<num_of_ids);
 
   //------------------------------------------------------
   // FIRST tf DETECTED (Line 210)
   //------------------------------------------------------
-  if(!first_tf_detected_)
+  if(!first_tf_detected_ && num_of_ids>0)
   {
     first_tf_detected_ = true;
-    ROS_INFO_STREAM("The first detected marker id "<<lowest_number_in_list<< " is set to be the origin!");
+    ROS_INFO_STREAM("The first detected marker id "<<lowest_number_in_list_<< " is set to be the origin!");
 
 
    // Identify lowest tf ID with world's origin
-    markers_[0].marker_id = lowest_number_in_list;
+    markers_[0].marker_id = lowest_number_in_list_;
 
     markers_[0].geometry_msg_to_world.position.x = 0;
     markers_[0].geometry_msg_to_world.position.y = 0;

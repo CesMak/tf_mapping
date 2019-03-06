@@ -77,6 +77,7 @@ protected:
   int num_of_markers_;
   float marker_size_;
   int closest_camera_index_;
+  int lowest_number_in_list_;
   tf2_msgs::TFMessageConstPtr tf_msg_list_;
 
   tf::TransformListener *listener_;
