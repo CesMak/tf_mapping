@@ -577,6 +577,11 @@ void TfMappingNode::publishTfs(bool world_option)
       std::stringstream marker_globe;
       marker_globe << "marker_globe_" << i;
       broadcaster_.sendTransform(tf::StampedTransform(markers_[i].tf_to_world,ros::Time::now(),"world", marker_globe.str()));
+
+      // id of this global marker:
+      std::stringstream marker_globe_id;
+      marker_globe_id << "id_" << markers_[i].marker_id;
+      broadcaster_.sendTransform(tf::StampedTransform(markers_[i].tf_to_world,ros::Time::now(),"world", marker_globe_id.str()));
     }
 
     // Cubes for RVIZ - markers

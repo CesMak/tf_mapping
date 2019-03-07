@@ -5,7 +5,7 @@
     <arg name="use_bag" default="False" />  <!-- use tf bag -->
     <arg name="bag_name" default="tf_example2_img" />
     <arg name="start_rviz" default="True" />
-    <arg name="use_map" default="True" />
+    <arg name="use_map" default="False" />
     <arg name="use_DEBUG_OUTPUT" default="False" /> <!-- currently not working.... -->
 
     <arg name="create_map" default="False" /> <!-- start in extra terminal using rosrun tf_mapping tf_create_map.py -->

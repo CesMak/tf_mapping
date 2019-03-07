@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--Create map first before running this launch file!
+see also: http://wiki.ros.org/navigation -->
+<launch>
+    <arg name="use_bag" default="False" /> 
+    <arg name="bag_name" default="todo" />
+    <arg name="start_rviz" default="True" />
+
+    <include file="$(find tf_mapping)/launch/use_map.launch"> </include>    
+
+    <!-- include aruco_detector_ocv -->
+    <group unless="$(arg use_bag)" >
+            <include file="$(find aruco_detector_ocv)/launch/detector.launch">
+                <arg name="use_rviz" default="False" />
+                <arg name="use_camera" default="True" />
+                <arg name="use_bag" default="$(arg use_bag)" />
+                <arg name="bag_name" default="$(arg bag_name)" />
+
+                <arg name="image_width" default="640" />
+                <arg name="image_height" default="480" />
+                <arg name="camera" default="/usb_cam/image_raw" />
+                <arg name="camera_info" default="/camera/camera_info" />
+                <arg name="tf_prefix" default="marker_id" /> <!-- do not change! -->
+                <arg name="show_detections" default="true" />
+                <arg name="marker_size" default="0.05" doc="length of the physical marker's side in meters"/>
+                <arg name="dictionary_name" default="DICT_4X4_1000" />
+                <arg name="blur_window_size" default="7" />
+                <arg name="num_detected" default="25" /><!-- 0: do not use it, -->
+                <arg name="min_prec_value" default="50" /><!-- 0: do not use it, 80 means aruco marker must be detected in 80% of the last pics to be displayed -->
+             </include>
+    </group>
+
+<!--<node name="usb_cam_to_camera_nav" pkg="tf" type="static_transform_publisher" args="0 0 0  0.0 0.0 0.0 1.0  /id_1_map  /marker_id1 10 "/>-->
+
+
+    <!-- Start rviz -->
+    <group if="$(arg start_rviz)" >
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find tf_mapping)/config/navigating.rviz"/>
+    </group>
+</launch>

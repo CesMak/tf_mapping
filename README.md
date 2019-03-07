@@ -18,6 +18,7 @@ Stelle so auf, dass zuerst nur Marker_Id = 1 footprint sieht. Dadurch werden fol
 - Translation: [-0.043, -0.506, 0.181]
 - Rotation: in Quaternion [0.016, 0.690, 0.722, 0.056]
 
+see also: http://wiki.ros.org/navigation
 
 
 TODO 
