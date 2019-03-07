@@ -3,14 +3,14 @@
  <launch> 
 
  
-<node name="initpos_to_globe_2_map_tf_pub" pkg="tf" type="static_transform_publisher" args="-0.0436904298866, -0.506519015332, 0.180221871967,     -0.0202637260665, -0.689900855018, -0.721188765184, -0.0592702001293  /world  /id_1_map 100 "/>
+<node name="initpos_to_globe_2_map_tf_pub" pkg="tf" type="static_transform_publisher" args="-0.0454599745145, -0.509876241023, 0.183418103305,     -0.0352509923257, -0.70046183033, -0.709189934399, -0.0718347321104  /world  /id_1_map 100 "/>
  
-<node name="initpos_to_globe_3_map_tf_pub" pkg="tf" type="static_transform_publisher" args="0.321424266955, -0.540218500087, 0.186190516141,     -0.0278928941634, -0.701706566868, -0.711389832977, -0.0274660883202  /world  /id_2_map 100 "/>
+<node name="initpos_to_globe_3_map_tf_pub" pkg="tf" type="static_transform_publisher" args="0.322545040137, -0.546093883079, 0.187134930089,     -0.043896454342, -0.697904743278, -0.713484661367, -0.0440648227113  /world  /id_2_map 100 "/>
  
-<node name="initpos_to_globe_4_map_tf_pub" pkg="tf" type="static_transform_publisher" args="0.396114409648, -0.528145505801, 0.143760582515,     -0.0765324072775, -0.693438600749, -0.715043353819, -0.044706820366  /world  /id_3_map 100 "/>
+<node name="initpos_to_globe_4_map_tf_pub" pkg="tf" type="static_transform_publisher" args="0.72900749069, -0.600824321229, 0.129472589938,     -0.0582216012837, -0.691463988176, -0.719655477312, -0.0241617916353  /world  /id_3_map 100 "/>
  
-<node name="initpos_to_globe_5_map_tf_pub" pkg="tf" type="static_transform_publisher" args="0.219666299227, -0.332455738308, 0.00857600908271,     0.000675042227159, 0.0207919143815, -0.859153402793, 0.51129509198  /world  /id_4_map 100 "/>
+<node name="initpos_to_globe_5_map_tf_pub" pkg="tf" type="static_transform_publisher" args="0.742462631721, -0.316632102198, -0.00869572238347,     0.0467254214841, -0.00900007525893, -0.671336818646, 0.739623288954  /world  /id_4_map 100 "/>
  
-<node name="initpos_to_globe_6_map_tf_pub" pkg="tf" type="static_transform_publisher" args="0.50849954788, -0.179091893842, 0.0113018190414,     5.17936226233e-05, 0.0215351752894, -0.864657167707, 0.501900603581  /world  /id_5_map 100 "/>
+<node name="initpos_to_globe_6_map_tf_pub" pkg="tf" type="static_transform_publisher" args="0.931545383681, -0.179075727989, 0.0134267943233,     0.0258194357086, -0.0541894552906, -0.785075181367, 0.616485051949  /world  /id_5_map 100 "/>
  
  </launch>

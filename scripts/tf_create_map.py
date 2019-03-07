@@ -51,4 +51,5 @@ if __name__ == '__main__':
             f = open(path, "w")
             f.write(result_file)
             print result_file
+            print "Finish file is written to: tf_mapping/launch/use_map.launch"
             rospy.signal_shutdown("Finish file is written to: tf_mapping/launch/use_map.launch")

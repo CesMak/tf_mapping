@@ -30,8 +30,7 @@ see also: http://wiki.ros.org/navigation -->
              </include>
     </group>
 
-<!--<node name="usb_cam_to_camera_nav" pkg="tf" type="static_transform_publisher" args="0 0 0  0.0 0.0 0.0 1.0  /id_1_map  /marker_id1 10 "/>-->
-
+   <node pkg="tf_mapping" type="tf_navigate.py" name="navigate_node" args=""/>
 
     <!-- Start rviz -->
     <group if="$(arg start_rviz)" >

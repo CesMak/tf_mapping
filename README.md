@@ -1,11 +1,16 @@
 # tf_mapping
 
+1) create a map:
+
+
+2) navigate in this map:
+
 Fixed marker moving camera!
 
-Stelle so auf, dass zuerst nur Marker_Id = 1 footprint sieht. Dadurch werden folgende Marker erstellt:
+Stelle so auf, dass zuerst nur Marker_Id = 0 footprint sieht. Dadurch werden folgende Marker erstellt:
 * Dort wo die Kamera aktuell ist: marker_globe_0
 * Dort wo man den Ursprung haben möchte: marker_globe_1 = *footprint of origin* -> set fixed frame to marker_globe_1 (Die Position und Orientierung unter tf in RVIZ von Bsp. marker_globe_2 ist dann relativ zu marker_globe_1 (die dort angegebene relative position ist bezüglich des world frames))
-* Bewege dann Kamera so dass Marker_Id = 1 und Marker_Id = 2 auf einem Bild zu sehen sind dadurch wird dann marker_globe_2 erstellt.
+* Bewege dann Kamera so dass Marker_Id = 0 und Marker_Id = 1 auf einem Bild zu sehen sind dadurch wird dann marker_globe_2 erstellt.
 * Fahre dann so weiter fort um map aufzubauen.
 * starte python skript um map abzuspeichern
 * starte roslaunch die automatisch fake_marker published.
