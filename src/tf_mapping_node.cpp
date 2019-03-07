@@ -1,8 +1,6 @@
 #include <tf_mapping/tf_mapping_node.h>
 #include <tf_mapping/helper.h>
 
-// rostopic echo /scan |grep frame_id
-
 namespace tf_mapping
 {
 
@@ -52,7 +50,7 @@ TfMappingNode::TfMappingNode(ros::NodeHandle& nh):
   //Resize marker container
   markers_.resize(num_of_markers_);
 
-  ROS_INFO("tf_mapping initialization finished");
+  ROS_DEBUG_STREAM("tf_mapping initialization finished");
 }
 
 TfMappingNode::~TfMappingNode()
@@ -111,7 +109,7 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
     if(tmp< lowest_number_in_list_)
       lowest_number_in_list_ = tmp;
   }
-  ROS_INFO_STREAM("The lowest id is " << lowest_number_in_list_ <<" #ids in List is: "<<num_of_ids);
+  ROS_DEBUG_STREAM("The lowest id is " << lowest_number_in_list_ <<" #ids in List is: "<<num_of_ids);
 
   //------------------------------------------------------
   // FIRST tf DETECTED (Line 210)
@@ -119,7 +117,7 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
   if(!first_tf_detected_ && num_of_ids>0)
   {
     first_tf_detected_ = true;
-    ROS_INFO_STREAM("The first detected marker id "<<lowest_number_in_list_<< " is set to be the origin!");
+    ROS_DEBUG_STREAM("The first detected marker id "<<lowest_number_in_list_<< " is set to be the origin!");
 
 
    // Identify lowest tf ID with world's origin
@@ -168,7 +166,7 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
     // Set sign of visibility of first marker
     markers_[0].visible=true;
 
-    ROS_INFO_STREAM("First marker with ID: " << markers_[0].marker_id << " detected");
+    ROS_DEBUG_STREAM("First marker with ID: " << markers_[0].marker_id << " detected");
 
     //First marker does not have any previous marker
     markers_[0].previous_marker_id = THIS_IS_FIRST_MARKER;
@@ -191,7 +189,7 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
       {
         index = temp_counter;
         existing = true;
-        ROS_INFO_STREAM("Existing marker with ID: " << current_marker_id << "found");
+        ROS_DEBUG_STREAM("Existing marker with ID: " << current_marker_id << "found");
       }
         temp_counter++;
     }
@@ -202,7 +200,7 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
       index = tf_counter_;
       markers_[index].marker_id = current_marker_id;
       existing = true;
-      ROS_INFO_STREAM("New marker with ID: " << current_marker_id << " found");
+      ROS_DEBUG_STREAM("New marker with ID: " << current_marker_id << " found");
     }
 
     // Change visibility flag of new marker
@@ -214,7 +212,7 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
           markers_[j].visible = true;
       }
     }
-    ROS_INFO_STREAM("succ. changed visibility");
+    ROS_DEBUG_STREAM("succ. changed visibility");
 
     //------------------------------------------------------
     // For existing marker do
@@ -250,7 +248,7 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
     //------------------------------------------------------
     if((index == tf_counter_) && (first_tf_detected_ == true))
     {
-      ROS_INFO_STREAM("Inside new marker do");
+      ROS_DEBUG_STREAM("Inside new marker do");
       tf::Vector3 marker_origin_tf;
       tf::Quaternion marker_quaternion_tf;
       tf::vector3MsgToTF(tf_msg_list_->transforms[i].transform.translation, marker_origin_tf);
@@ -269,7 +267,7 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
       markers_[index].current_camera_pose.orientation.z = marker_quaternion.getZ();
       markers_[index].current_camera_pose.orientation.w = marker_quaternion.getW();
 
-      ROS_INFO_STREAM("Updated new marker");
+      ROS_DEBUG_STREAM("Updated new marker");
 
       // Naming - TFs
       std::stringstream camera_tf_id;
@@ -299,7 +297,7 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
            }
          }
        }
-      ROS_INFO_STREAM("Done testing if is possible");
+      ROS_DEBUG_STREAM("Done testing if is possible");
 
      // New position can be calculated
      if(any_known_marker_visible == true)
@@ -317,7 +315,7 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
 
          ros::Duration(BROADCAST_WAIT_INTERVAL).sleep();
        }
-      ROS_INFO_STREAM("Done getting tfs for listener");
+      ROS_DEBUG_STREAM("Done getting tfs for listener");
 
         // Calculate TF between two markers
         listener_->waitForTransform(marker_tf_id_old.str(), camera_tf_id.str(), ros::Time(0),
@@ -338,7 +336,7 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
           ROS_ERROR("Not able to lookup transform");
         }
 
-        ROS_INFO_STREAM("Done calc TF between two markers");
+        ROS_DEBUG_STREAM("Done calc TF between two markers");
 
         // Save origin and quaternion of calculated TF
         marker_origin = markers_[index].tf_to_previous.getOrigin();
@@ -398,7 +396,7 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
     //------------------------------------------------------
     if((tf_counter_previous_ < tf_counter_) && (first_tf_detected_ == true))
     {
-      ROS_INFO_STREAM("Inside compute global position of new marker");
+      ROS_DEBUG_STREAM("Inside compute global position of new marker");
       // Publish all TF five times for listener
       for(char k = 0; k < 5; k++)
         publishTfs(false);
@@ -549,7 +547,7 @@ void TfMappingNode::input_tfCb(const tf2_msgs::TFMessageConstPtr& msg)
 
 //return true;
 
- ROS_INFO_STREAM("---");
+ ROS_DEBUG_STREAM("---");
 } // end of function
 
 
@@ -578,7 +576,7 @@ void TfMappingNode::publishTfs(bool world_option)
       // Global position of marker TF
       std::stringstream marker_globe;
       marker_globe << "marker_globe_" << i;
-      broadcaster_.sendTransform(tf::StampedTransform(markers_[i].tf_to_world,ros::Time::now(),"world",marker_globe.str()));
+      broadcaster_.sendTransform(tf::StampedTransform(markers_[i].tf_to_world,ros::Time::now(),"world", marker_globe.str()));
     }
 
     // Cubes for RVIZ - markers
@@ -587,7 +585,7 @@ void TfMappingNode::publishTfs(bool world_option)
 
   // Global Position of object
   if(world_option == true)
-    broadcaster_.sendTransform(tf::StampedTransform(world_position_transform_,ros::Time::now(),"world","camera_position"));
+    broadcaster_.sendTransform(tf::StampedTransform(world_position_transform_,ros::Time::now(), "world", "camera_position"));
 }
 
 

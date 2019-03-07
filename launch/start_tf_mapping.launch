@@ -5,6 +5,23 @@
     <arg name="use_bag" default="False" />  <!-- use tf bag -->
     <arg name="bag_name" default="tf_example2_img" />
     <arg name="start_rviz" default="True" />
+    <arg name="use_map" default="True" />
+    <arg name="use_DEBUG_OUTPUT" default="False" /> <!-- currently not working.... -->
+
+    <arg name="create_map" default="False" /> <!-- start in extra terminal using rosrun tf_mapping tf_create_map.py -->
+
+
+    <group if="$(arg use_DEBUG_OUTPUT)" >
+             <node pkg="rosservice" type="rosservice" name="set_logger_level" args="call /tf_mapping_node/set_logger_level '{logger: 'rosout', level: 'ERROR'}'"/>
+    </group>
+
+    <group if="$(arg use_map)" >
+        <include file="$(find tf_mapping)/launch/use_map.launch"> </include>    
+    </group>
+
+    <group if="$(arg create_map)" >
+           <node pkg="tf_mapping" type="tf_create_map.py"           name="tf_create_map" /> 
+    </group>
 
     <!-- start bag file in a loop -->
     <group if="$(arg use_bag)" >

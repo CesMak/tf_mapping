@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<launch>
+
+
+    <!--<node name="initpos_to_globe_2_map_tf_pub" pkg="tf" type="static_transform_publisher" 
+    args="-0.043, -0.506, 0.181 0.016, 0.690, 0.722, 0.056 /marker_globe_1 /marker_globe_2_map 100" />-->
+
+<node name="initpos_to_globe_2_map_tf_pub" pkg="tf" type="static_transform_publisher" args="-0.0439078070927, -0.509405648389, 0.181581539121,     -0.0211379183288, -0.69107301685,
+ -0.719884320888, -0.0611378633042 /marker_globe_1 /marker_globe_2_map 100 "/>
+</launch>

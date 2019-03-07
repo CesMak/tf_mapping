@@ -1,15 +1,23 @@
 # tf_mapping
 
+Fixed marker moving camera!
 
 Stelle so auf, dass zuerst nur Marker_Id = 1 footprint sieht. Dadurch werden folgende Marker erstellt:
 * Dort wo die Kamera aktuell ist: marker_globe_0
-* Dort wo man den Ursprung haben möchte: marker_globe_1 = *footprint of origin* -> set fixed frame to marker_globe_1
+* Dort wo man den Ursprung haben möchte: marker_globe_1 = *footprint of origin* -> set fixed frame to marker_globe_1 (Die Position und Orientierung unter tf in RVIZ von Bsp. marker_globe_2 ist dann relativ zu marker_globe_1 (die dort angegebene relative position ist bezüglich des world frames))
 * Bewege dann Kamera so dass Marker_Id = 1 und Marker_Id = 2 auf einem Bild zu sehen sind dadurch wird dann marker_globe_2 erstellt.
 * Fahre dann so weiter fort um map aufzubauen.
 * starte python skript um map abzuspeichern
 * starte roslaunch die automatisch fake_marker published.
 * diese fake_marker können dann zur navigation genutzt werden.
  
+
+// rostopic echo /scan |grep frame_id
+// rosrun tf tf_monitor /marker_globe_1 /marker_globe_2
+// rosrun tf tf_echo /marker_globe_1 /marker_globe_2
+- Translation: [-0.043, -0.506, 0.181]
+- Rotation: in Quaternion [0.016, 0.690, 0.722, 0.056]
+
 
 
 TODO 
