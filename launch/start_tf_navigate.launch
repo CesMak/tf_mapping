@@ -5,6 +5,7 @@ see also: http://wiki.ros.org/navigation -->
     <arg name="use_bag" default="False" /> 
     <arg name="bag_name" default="todo" />
     <arg name="start_rviz" default="True" />
+    <arg name="start_navigate" default="True" />
 
     <include file="$(find tf_mapping)/launch/use_map.launch"> </include>    
 
@@ -30,7 +31,9 @@ see also: http://wiki.ros.org/navigation -->
              </include>
     </group>
 
-   <node pkg="tf_mapping" type="tf_navigate.py" name="navigate_node" args=""/>
+    <group if="$(arg start_navigate)" >
+        <node pkg="tf_mapping" type="tf_navigate.py" name="navigate_node" args=""/>
+    </group>
 
     <!-- Start rviz -->
     <group if="$(arg start_rviz)" >

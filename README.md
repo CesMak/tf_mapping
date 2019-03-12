@@ -26,6 +26,24 @@ Stelle so auf, dass zuerst nur Marker_Id = 0 footprint sieht. Dadurch werden fol
 see also: http://wiki.ros.org/navigation
 
 
+
+3) construct EKF see http://wiki.ros.org/robot_pose_ekf
+
+
+4) Use robot_localization
+http://docs.ros.org/melodic/api/robot_localization/html/index.html#
+http://docs.ros.org/melodic/api/robot_localization/html/migrating_from_robot_pose_ekf.html
+https://vimeo.com/142624091
+https://www.youtube.com/watch?v=nQZeAafDEJE
+https://github.com/cra-ros-pkg/robot_localization
+
+5) Get position and odometry of robot first using ackermann steering methods!
+-> I have no wheel encoders....
+
+
+6) write a kalman filter that simply computes fueses point msgs with a linear model.
+
+
 TODO 
 ![aruco_detector_example](https://github.com/CesMak/aruco_detector_ocv/blob/master/data/rviz_example.png)
 

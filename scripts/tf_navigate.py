@@ -4,11 +4,16 @@ roslib.load_manifest('tf_mapping')
 import rospy
 import tf
 import rospkg
+from geometry_msgs.msg import PoseWithCovarianceStamped
+from geometry_msgs.msg import PoseStamped
 import numpy as numpy
 
 if __name__ == '__main__':
     rospy.init_node('tf_navigate')
     rospy.loginfo("Started tf_navigate %s", '')
+    
+    cam_pose_pub = rospy.Publisher('/cam_pose_in_world', PoseWithCovarianceStamped, queue_size=10)
+    cam_pose_pub_rviz = rospy.Publisher('/cam_pose_in_world_rviz', PoseStamped, queue_size=10)
 
     listener = tf.TransformListener()
 
@@ -60,6 +65,28 @@ if __name__ == '__main__':
                 trans_res[2] = sum_z/number_detected_marker_id
                 bb = tf.TransformBroadcaster()
                 bb.sendTransform(trans_res, rot3, rospy.Time.now(), "usb_cam_world", "world")
+
+
+                pose_msg = PoseWithCovarianceStamped()
+                pose_msg.header.stamp = rospy.Time.now()
+                pose_msg.header.frame_id = "world"
+                pose_msg.pose.covariance = [0]*36
+                pose_msg.pose.pose.position.x  = trans_res[0]
+                pose_msg.pose.pose.position.y  = trans_res[1]
+                pose_msg.pose.pose.position.z  = trans_res[2]
+                pose_msg.pose.pose.orientation.x = rot3[0]
+                pose_msg.pose.pose.orientation.y = rot3[1]
+                pose_msg.pose.pose.orientation.z = rot3[2]
+                pose_msg.pose.pose.orientation.w = rot3[3]
+
+                pose_rviz_msg = PoseStamped()
+                pose_rviz_msg.header = pose_msg.header
+                pose_rviz_msg.pose = pose_msg.pose.pose
+
+                #print "publish the pose_msg"
+                #print pose_rviz_msg
+                cam_pose_pub.publish(pose_msg)
+                cam_pose_pub_rviz.publish(pose_rviz_msg)
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             print "inside except"
             continue
