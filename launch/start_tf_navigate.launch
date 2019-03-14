@@ -35,6 +35,14 @@ see also: http://wiki.ros.org/navigation -->
         <node pkg="tf_mapping" type="tf_navigate.py" name="navigate_node" args=""/>
     </group>
 
+
+     <!-- start simple_kf node -->
+     <node name="simple_kf_node" pkg="simple_kf" type="simple_kf_node" output="screen"  /> 
+
+    <!-- Start publish marker of kf and uncertainty -->
+    <node name="simple_kf_vis_node" pkg="simple_kf" type="simple_kf_vis_node" output="screen"  /> 
+
+
     <!-- Start rviz -->
     <group if="$(arg start_rviz)" >
         <node pkg="rviz" type="rviz" name="rviz" args="-d $(find tf_mapping)/config/navigating.rviz"/>

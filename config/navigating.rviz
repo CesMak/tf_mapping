@@ -6,7 +6,10 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /Grid1
+        - /TF1
         - /TF1/Frames1
+        - /LoadImages1
       Splitter Ratio: 0.608069181
     Tree Height: 326
   - Class: rviz/Selection
@@ -71,6 +74,8 @@ Visualization Manager:
           Value: true
         id_5_map:
           Value: true
+        marker_id0:
+          Value: true
         marker_id1:
           Value: true
         marker_id2:
@@ -80,6 +85,8 @@ Visualization Manager:
         usb_cam_world:
           Value: true
         usb_cam_world_1:
+          Value: true
+        usb_cam_world_2:
           Value: true
         world:
           Value: true
@@ -103,6 +110,8 @@ Visualization Manager:
           usb_cam_world:
             {}
           usb_cam_world_1:
+            {}
+          usb_cam_world_2:
             {}
       Update Interval: 0
       Value: true
@@ -133,6 +142,14 @@ Visualization Manager:
       Topic: /cam_pose_in_world_rviz
       Unreliable: false
       Value: true
+    - Alpha: 1
+      Class: rviz_plugins/LoadImages
+      Draw Behind: false
+      Enabled: true
+      Force reload: true
+      Name: LoadImages
+      Resolution: 0.00026458333
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -158,7 +175,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1.70540202
+      Distance: 0.985779166
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
@@ -173,10 +190,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.680397868
+      Pitch: 0.504797399
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.66540003
+      Yaw: 1.84037662
     Saved: ~
 Window Geometry:
   Displays:

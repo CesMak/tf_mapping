@@ -55,11 +55,20 @@ def store_image(x, y, z, qx, qy, qz, qw, id):
 
 
     roi = cv_image[center_y-dis:center_y+dis, center_x-dis:center_x+dis]
-
+    resized_image = cv2.resize(roi, (256, 256)) 
     rospack = rospkg.RosPack()
+    round_factor = 4
+    scale_factor = 1
+    x = round(x, round_factor)*scale_factor
+    y = round(y, round_factor)*scale_factor
+    z = round(z, round_factor)*scale_factor
+    qx = round(qx, 4)
+    qy = round(qy, 4)
+    qz = round(qz, 4)
+    qw = round(qw, 4)
     img_name = str(x)+"_"+str(y)+"_"+str(z)+"_"+str(qx)+"_"+str(qy)+"_"+str(qz)+"_"+str(qw)+"_id:"+str(id)+".jpg"
-    path = rospack.get_path('tf_mapping')+"/my_img_map/"+img_name
-    cv2.imwrite(path, roi)
+    path = rospack.get_path('rviz_pics')+"/map/"+img_name
+    cv2.imwrite(path, resized_image)
 
     print "I wrote the image at:"+path
 

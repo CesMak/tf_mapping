@@ -54,7 +54,6 @@
     <!-- load config into parameter server 
     <rosparam file="$(find tf_mapping)/config/$(arg confi_name).yaml" command="load" />
     -->
-
      <!-- start tf_mapping node -->
      <node name="tf_mapping_node" pkg="tf_mapping" type="tf_mapping_node" output="screen"  />
 
