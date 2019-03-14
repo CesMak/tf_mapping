@@ -8,7 +8,7 @@
     <arg name="use_map" default="False" />
     <arg name="use_DEBUG_OUTPUT" default="False" /> <!-- currently not working.... -->
 
-    <arg name="create_map" default="False" /> <!-- start in extra terminal using rosrun tf_mapping tf_create_map.py -->
+    <arg name="create_map" default="False" /> <!-- start in extra terminal using rosrun tf_mapping tf_create_map.py creates launch file with tfs! -->
 
 
     <group if="$(arg use_DEBUG_OUTPUT)" >

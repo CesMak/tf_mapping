@@ -1,9 +1,92 @@
 #!/usr/bin/env python  
+
+# To use this program start it right after the tf_mapping node
+# make sure that the camera does not see a marker at the first image
+# If this script is started as well point first the camera to just aruco marker 0
+# Then such that the camera sees the aruco marker 
 import roslib
 roslib.load_manifest('tf_mapping')
 import rospy
 import tf
 import rospkg
+from alfons_msgs.msg import ArucoInfo
+import cv2
+import numpy as np
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge, CvBridgeError
+
+marker_ids  = []
+center_x_px = []
+center_y_px = []
+bridge = CvBridge()
+
+def get_dis_to_closest_corner(center_x, center_y):
+    max_x = 640
+    max_y = 480
+    min_dis_x = center_x
+    min_dis_y = center_y
+    if (max_x - center_x) < center_x:
+        min_dis_x = max_x - center_x
+    
+    if (max_y - center_y) < center_y:
+        min_dis_y = max_y - center_y
+    
+    if min_dis_x < min_dis_y:
+        return min_dis_x
+    else:
+        return min_dis_y
+
+def store_image(x, y, z, qx, qy, qz, qw, id):
+    # use fields image, marker_ids
+    print "store id: "+str(id)
+    print marker_ids
+    j = -1
+    for i in xrange(0, len(marker_ids)):
+        if marker_ids[i] == id:
+            j=i
+            break
+    if(j<0):
+        "caution error!!!!"
+    center_x = center_x_px[j]
+    center_y = center_y_px[j]
+
+    dis = get_dis_to_closest_corner(center_x, center_y)
+    print "I saw id: "+str(id)+" with its center at: "+str(center_x)+", "+str(center_y)+" min dis: "+str(dis)
+
+
+    roi = cv_image[center_y-dis:center_y+dis, center_x-dis:center_x+dis]
+
+    rospack = rospkg.RosPack()
+    img_name = str(x)+"_"+str(y)+"_"+str(z)+"_"+str(qx)+"_"+str(qy)+"_"+str(qz)+"_"+str(qw)+"_id:"+str(id)+".jpg"
+    path = rospack.get_path('tf_mapping')+"/my_img_map/"+img_name
+    cv2.imwrite(path, roi)
+
+    print "I wrote the image at:"+path
+
+
+
+def img_cb(msg):
+    global cv_image
+    try:
+        cv_image = bridge.imgmsg_to_cv2(msg, "bgr8") # type: numpy.ndarray
+    except CvBridgeError as e:
+        print(e)
+    
+def aruco_info_cb(msg):
+    global marker_ids
+    global center_x_px
+    global center_y_px
+    marker_ids = []
+    center_x_px = []
+    center_y_px = []
+    for i in xrange(0, len(msg.marker_ids)):
+        marker_ids.append(msg.marker_ids[i])
+    
+    for i in xrange(0, len(msg.center_x_px)):
+        center_x_px.append(msg.center_x_px[i])
+    
+    for i in xrange(0, len(msg.center_y_px)):
+        center_y_px.append(msg.center_y_px[i])
 
 if __name__ == '__main__':
     rospy.init_node('tf_create_map')
@@ -12,6 +95,11 @@ if __name__ == '__main__':
     listener = tf.TransformListener()
 
     rate = rospy.Rate(10.0)
+
+    # Subscriber
+    rospy.Subscriber("/aruco_list", ArucoInfo, aruco_info_cb)
+    image_sub = rospy.Subscriber("/usb_cam/image_raw", Image, img_cb)
+
     printed_number = 2
     max_number     = 6  # if this number is reached program is closed file is written.
     result_file ="<?xml version=\"1.0\"?> \n \n <launch> \n"
@@ -39,11 +127,15 @@ if __name__ == '__main__':
                     str_output = "<node name=\"initpos_to_globe_"+str(printed_number)+"_map_tf_pub\" pkg=\"tf\" type=\"static_transform_publisher\" args=\""+str_output+" /world  /"+id_nr+"_map 100 \"/>"
                     result_file = result_file+"\n \n"+str_output
                     printed_number = printed_number+1
+
+                    store_image(trans[0], trans[1], trans[2], rot[0], rot[1], rot[2], rot[3], int(id_nr[3:]))
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 #print exception
                 continue
             rate.sleep()
         else:
+            cv2.destroyAllWindows()
+            print "max number reached end!"
             result_file = result_file+"\n \n </launch>"
             rospack = rospkg.RosPack()
             path = rospack.get_path('tf_mapping')+"/launch/use_map.launch"
