@@ -55,7 +55,14 @@ def store_image(x, y, z, qx, qy, qz, qw, id):
 
 
     roi = cv_image[center_y-dis:center_y+dis, center_x-dis:center_x+dis]
-    resized_image = cv2.resize(roi, (256, 256)) 
+    # resize image to end with a zero!!! This is important for the tileloading
+    # Otherwise tiles are of wrong color and cutted wrong somehow
+    print dis
+    img_size_ = int( round(abs(dis/10))*10)
+    rest = img_size_%4
+    img_size_ = img_size_+rest
+    print img_size_
+    resized_image = cv2.resize(roi, (img_size_, img_size_))
     rospack = rospkg.RosPack()
     round_factor = 4
     scale_factor = 1

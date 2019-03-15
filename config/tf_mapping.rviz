@@ -90,12 +90,6 @@ Visualization Manager:
           Value: true
         camera_3:
           Value: true
-        camera_4:
-          Value: true
-        camera_5:
-          Value: true
-        camera_6:
-          Value: true
         camera_position:
           Value: true
         id_-1:
@@ -106,12 +100,6 @@ Visualization Manager:
           Value: true
         id_2:
           Value: true
-        id_3:
-          Value: true
-        id_4:
-          Value: true
-        id_5:
-          Value: true
         marker_0:
           Value: false
         marker_1:
@@ -119,12 +107,6 @@ Visualization Manager:
         marker_2:
           Value: false
         marker_3:
-          Value: true
-        marker_4:
-          Value: true
-        marker_5:
-          Value: true
-        marker_6:
           Value: true
         marker_globe_0:
           Value: true
@@ -134,23 +116,11 @@ Visualization Manager:
           Value: true
         marker_globe_3:
           Value: true
-        marker_globe_4:
-          Value: true
-        marker_globe_5:
-          Value: true
-        marker_globe_6:
-          Value: true
         marker_id0:
           Value: true
         marker_id1:
           Value: false
         marker_id2:
-          Value: true
-        marker_id3:
-          Value: true
-        marker_id4:
-          Value: true
-        marker_id5:
           Value: true
         usb_cam:
           Value: false
@@ -173,12 +143,6 @@ Visualization Manager:
             {}
           id_2:
             {}
-          id_3:
-            {}
-          id_4:
-            {}
-          id_5:
-            {}
           marker_0:
             camera_0:
               {}
@@ -188,18 +152,9 @@ Visualization Manager:
               marker_2:
                 camera_2:
                   {}
-              marker_3:
-                camera_3:
-                  {}
-                marker_4:
-                  camera_4:
+                marker_3:
+                  camera_3:
                     {}
-                  marker_5:
-                    camera_5:
-                      {}
-                    marker_6:
-                      camera_6:
-                        {}
           marker_globe_0:
             {}
           marker_globe_1:
@@ -208,19 +163,13 @@ Visualization Manager:
             {}
           marker_globe_3:
             {}
-          marker_globe_4:
-            {}
-          marker_globe_5:
-            {}
-          marker_globe_6:
-            {}
       Update Interval: 0
       Value: true
     - Alpha: 1
+      Auto reload: true
       Class: rviz_plugins/LoadImages
       Draw Behind: false
       Enabled: true
-      Force reload: true
       Name: LoadImages
       Resolution: 0.00026458333
       Value: true
@@ -249,7 +198,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.221246496
+      Distance: 1.35632825
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
@@ -264,10 +213,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.305400074
+      Pitch: 0.680399716
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.34541297
+      Yaw: 0.920413375
     Saved: ~
 Window Geometry:
   Displays:

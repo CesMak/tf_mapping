@@ -6,6 +6,7 @@ see also: http://wiki.ros.org/navigation -->
     <arg name="bag_name" default="todo" />
     <arg name="start_rviz" default="True" />
     <arg name="start_navigate" default="True" />
+    <arg name="start_plotjuggler" default="False" />
 
     <include file="$(find tf_mapping)/launch/use_map.launch"> </include>    
 
@@ -42,6 +43,11 @@ see also: http://wiki.ros.org/navigation -->
     <!-- Start publish marker of kf and uncertainty -->
     <node name="simple_kf_vis_node" pkg="simple_kf" type="simple_kf_vis_node" output="screen"  /> 
 
+
+    <!-- Start start_plotjuggler to analyse kf filter results -->
+    <group if="$(arg start_plotjuggler)" >
+            <node pkg="plotjuggler" type="PlotJuggler" name="my_plot_Juggler" args="-l $(find tf_mapping)/config/kf_layout.xml" />
+    </group>
 
     <!-- Start rviz -->
     <group if="$(arg start_rviz)" >
