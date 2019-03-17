@@ -36,8 +36,8 @@
                 <arg name="use_bag" default="$(arg use_img_bag)" />
                 <arg name="bag_name" default="$(arg bag_name)" />
 
-                <arg name="image_width" default="640" />
-                <arg name="image_height" default="480" />
+                <arg name="image_width" default="1920" />
+                <arg name="image_height" default="1080" />
                 <arg name="camera" default="/usb_cam/image_raw" />
                 <arg name="camera_info" default="/camera/camera_info" />
                 <arg name="tf_prefix" default="marker_id" /> <!-- do not change! -->

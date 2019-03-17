@@ -13,6 +13,7 @@ from alfons_msgs.msg import ArucoInfo
 import cv2
 import numpy as np
 from sensor_msgs.msg import Image
+from sensor_msgs.msg import CameraInfo
 from cv_bridge import CvBridge, CvBridgeError
 
 marker_ids  = []
@@ -21,8 +22,8 @@ center_y_px = []
 bridge = CvBridge()
 
 def get_dis_to_closest_corner(center_x, center_y):
-    max_x = 640
-    max_y = 480
+    max_x = width_
+    max_y = height_
     min_dis_x = center_x
     min_dis_y = center_y
     if (max_x - center_x) < center_x:
@@ -54,7 +55,7 @@ def store_image(x, y, z, qx, qy, qz, qw, id):
     print "I saw id: "+str(id)+" with its center at: "+str(center_x)+", "+str(center_y)+" min dis: "+str(dis)
 
 
-    roi = cv_image[center_y-dis:center_y+dis, center_x-dis:center_x+dis]
+    roi = cv_image[abs(center_y-dis):abs(center_y+dis), abs(center_x-dis):abs(center_x+dis)]
     # resize image to end with a zero!!! This is important for the tileloading
     # Otherwise tiles are of wrong color and cutted wrong somehow
     print dis
@@ -83,8 +84,11 @@ def store_image(x, y, z, qx, qy, qz, qw, id):
 
 def img_cb(msg):
     global cv_image
+    global width_
+    global height_
     try:
-        cv_image = bridge.imgmsg_to_cv2(msg, "bgr8") # type: numpy.ndarray
+        cv_image = bridge.imgmsg_to_cv2(msg, "bgr8") # type: numpy.
+        width_, height_, channels = cv_image.shape
     except CvBridgeError as e:
         print(e)
     
