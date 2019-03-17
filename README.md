@@ -69,12 +69,11 @@ roslaunch tf_mapping start_tf_navigate.launch
 ## License BSD
 If you want to use this package please contact: [me](https://simact.de/about_me).
 
+<!-- 
 
-## TODO's
-- create map with high resolution images!
-- http://wiki.ros.org/navigation
+http://wiki.ros.org/navigation
 
-<!-- http://docs.ros.org/melodic/api/robot_localization/html/index.html#
+http://docs.ros.org/melodic/api/robot_localization/html/index.html#
 http://docs.ros.org/melodic/api/robot_localization/html/migrating_from_robot_pose_ekf.html
 https://vimeo.com/142624091
 https://www.youtube.com/watch?v=nQZeAafDEJE
