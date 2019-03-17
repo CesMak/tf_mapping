@@ -99,4 +99,5 @@ https://github.com/cra-ros-pkg/robot_localization
 [alfons_msgs/KfState]: https://github.com/CesMak/alfons_msgs/blob/master/msg/KfState.msg
 [alfons_msgs]: https://github.com/CesMak/alfons_msgs
 [aruco_detector_ocv]: https://github.com/CesMak/aruco_detector_ocv
-[simple_kf]:https://github.com/CesMak/simple_kf
+[simple_kf]: https://github.com/CesMak/simple_kf
+[rviz_pics]: https://github.com/CesMak/rviz_pics
